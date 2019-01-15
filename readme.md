@@ -7,6 +7,7 @@
 
 ## Searching and opening results 
 `tmt` -- List the recent taks or search for a specific task to start it. 
+
 `tms` -- Stop the current task. 
 
 ## Thanks
