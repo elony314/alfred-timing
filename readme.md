@@ -5,7 +5,7 @@
 ## Release
 [Download](https://github.com/elony314/alfred-timing/releases/)
 
-## Searching and opening results 
+## Usage
 `tmt` -- List the recent taks or search for a specific task to start it. 
 
 `tms` -- Stop the current task. 
