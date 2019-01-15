@@ -1,4 +1,4 @@
-# Timing Alfred Workflow
+# Alfred Timing Workflow
 
 [Alfred 3 workflow](https://www.alfredapp.com/workflows/) to search and create tasks in [Timing](https://timingapp.com/). 
 
