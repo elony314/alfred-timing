@@ -14,5 +14,5 @@
 - [chrisbro](https://github.com/chrisbro): use his [alfred-bear](https://github.com/chrisbro/alfred-bear) as the skeleton.
 
 ## Versions
-## 0.0.1 
+## v0.0.1 
 Initial public release.
