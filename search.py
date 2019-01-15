@@ -8,10 +8,8 @@ Main search script for alfred-bear workflow.
 import sys
 import argparse
 import queries
+import json
 from workflow import Workflow, ICON_SYNC
-
-TITLE = "i"
-TAGS = "a"
 
 SINGLE_QUOTE = "'"
 ESC_SINGLE_QUOTE = "''"
@@ -19,15 +17,14 @@ ESC_SINGLE_QUOTE = "''"
 LOGGER = None
 
 # Update workflow from GitHub repo
-UPDATE_SETTINGS = {'github_slug': 'chrisbro/alfred-bear'}
+UPDATE_SETTINGS = {'github_slug': 'elony314/alfred-timing'}
 SHOW_UPDATES = True
 
 
 def main(workflow):
     """
-    I'm just here so I don't get fined by pylint
+    I don't use pylint 
     """
-
     if SHOW_UPDATES and workflow.update_available:
         workflow.add_item('A new version is available',
                           'Action this item to install the update',
@@ -39,7 +36,7 @@ def main(workflow):
 
     if args.query:
         query = args.query[0]
-        LOGGER.debug("Searching notes for %s", format(query))
+        LOGGER.debug("Searching tasks for %s", format(query))
         execute_search_query(args)
 
     workflow.send_feedback()
@@ -49,13 +46,14 @@ def parse_args():
     """
     Parses out the arguments sent to the script in the Alfred workflow.
     """
+    parser = argparse.ArgumentParser(description="Parse Tasks Argument")
 
-    parser = argparse.ArgumentParser(description="Search Bear Notes")
-    parser.add_argument('-t', '--type', default=TITLE,
-                        choices=[TITLE, TAGS],
-                        type=str, help='What to search for: t(i)tle, or t(a)gs?')
-    parser.add_argument('query', type=unicode,
-                        nargs=argparse.REMAINDER, help='query string')
+# TODO: Add new task    
+#     parser.add_argument('-n', '--new', default=False, const=True, nargs=0, type=bool, help='New task or not')
+#     
+#     parser.add_argument('-t', '--taskname', nargs=1, type=str, help='Name of the new task')
+   
+    parser.add_argument('query', type=unicode, nargs=argparse.REMAINDER, help='query string')
 
     LOGGER.debug(WORKFLOW.args)
     args = parser.parse_args(WORKFLOW.args)
@@ -67,50 +65,28 @@ def execute_search_query(args):
     Decides what search to run based on args that were passed in and executes the search.
     """
     query = None
-    if args.query:
+    if args.query[0]:
+        LOGGER.debug('Searching tasks')
         query = args.query[0]
         query = query.encode('utf-8')
 
         if SINGLE_QUOTE in query:
             query = query.replace(SINGLE_QUOTE, ESC_SINGLE_QUOTE)
-
-    if args.type == TAGS:
-        LOGGER.debug('Searching tags')
-        query = query.replace('#', '')
-        tag_results = queries.search_tags_by_title(WORKFLOW, LOGGER, query)
-        note_results = queries.search_notes_by_tag_title(WORKFLOW, LOGGER, query)
-        if not tag_results:
-            WORKFLOW.add_item('No search results found.')
-        else:
-            for tag_result in tag_results:
-                LOGGER.debug(tag_result)
-                tag_arg = ':t:' + tag_result[0]
-                LOGGER.debug(tag_arg)
-                WORKFLOW.add_item(title='#' + tag_result[0], subtitle="Open tag",
-                                  arg=tag_arg, valid=True)
-            for note_result in note_results:
-                LOGGER.debug(note_results)
-                note_arg = ':n:' + note_result[0]
-                WORKFLOW.add_item(title=note_result[1], subtitle="Open note",
-                                  arg=note_arg, valid=True)
-
+        
+        task_results =  queries.search_tasks_by_title(WORKFLOW, LOGGER, query)
+    
     else:
-        LOGGER.debug('Searching notes')
-        title_results = queries.search_notes_by_title(WORKFLOW, LOGGER, query)
-        text_results = queries.search_notes_by_text(WORKFLOW, LOGGER, query)
-        if not title_results and not text_results:
-            WORKFLOW.add_item('No search results found.')
-        else:
-            note_ids = []
-            for title_result in title_results:
-                LOGGER.debug(title_result)
-                WORKFLOW.add_item(title=title_result[1], subtitle="Open note", arg=title_result[0], valid=True)
-                note_ids.append(title_result[0])
-            for text_result in text_results:
-                if text_result[0] not in note_ids:
-                    LOGGER.debug(text_result)
-                    WORKFLOW.add_item(title=text_result[1], subtitle="Open note", arg=text_result[0], valid=True)
-
+        LOGGER.debug('List recent tasks')
+        task_results = queries.list_recent_tasks(WORKFLOW, LOGGER, query)
+    
+    if not task_results:
+        WORKFLOW.add_item("No tasks found")
+    else:
+        for task_result in task_results:
+            LOGGER.debug(task_result)
+            json_arg = json.dumps({"task_name": task_result[0], "proj_name":task_result[1], "proj_id":str( task_result[2])})
+            LOGGER.debug(json_arg)
+            WORKFLOW.add_item(title=task_result[0], subtitle="Project: {}".format(task_result[1]), arg=json_arg, valid=True)        
 
 if __name__ == '__main__':
     WORKFLOW = Workflow(update_settings=UPDATE_SETTINGS)
