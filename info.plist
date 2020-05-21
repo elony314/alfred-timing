@@ -8,11 +8,23 @@
 	<string>Productivity</string>
 	<key>connections</key>
 	<dict>
-		<key>034C4361-5DDC-4673-8760-0C0ABA995F3A</key>
+		<key>32EAA6C3-50B5-4590-ACE5-FD280CF3CA4F</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>A548DA55-5C70-4C27-ABF2-228D4D0C6556</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>79D78DCE-1590-4C49-8683-8584A1DFFBFE</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B15F95C5-136D-458C-8C85-086C07725276</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -25,7 +37,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>B15F95C5-136D-458C-8C85-086C07725276</string>
+				<string>32EAA6C3-50B5-4590-ACE5-FD280CF3CA4F</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -53,11 +65,11 @@
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
-				<integer>102</integer>
+				<integer>68</integer>
 				<key>script</key>
-				<string>osascript -l JavaScript startTask.js "{query}"</string>
+				<string>osascript -l JavaScript stopTask.js</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
@@ -66,7 +78,7 @@
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>B15F95C5-136D-458C-8C85-086C07725276</string>
+			<string>A548DA55-5C70-4C27-ABF2-228D4D0C6556</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -77,6 +89,8 @@
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
 				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
 				<key>argumenttrimmode</key>
 				<integer>0</integer>
 				<key>argumenttype</key>
@@ -115,26 +129,35 @@
 			<key>uid</key>
 			<string>70C36F38-409B-45D1-AE5A-5825FEE60148</string>
 			<key>version</key>
-			<integer>2</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>tms</string>
-				<key>subtext</key>
-				<string></string>
-				<key>text</key>
-				<string>Stop Current Timing Task</string>
-				<key>withspace</key>
-				<false/>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string></string>
+						<key>matchcasesensitive</key>
+						<true/>
+						<key>matchmode</key>
+						<integer>0</integer>
+						<key>matchstring</key>
+						<string>pause</string>
+						<key>outputlabel</key>
+						<string>pause</string>
+						<key>uid</key>
+						<string>79D78DCE-1590-4C49-8683-8584A1DFFBFE</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>{query}</string>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
+			<string>alfred.workflow.utility.conditional</string>
 			<key>uid</key>
-			<string>034C4361-5DDC-4673-8760-0C0ABA995F3A</string>
+			<string>32EAA6C3-50B5-4590-ACE5-FD280CF3CA4F</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -144,11 +167,11 @@
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
-				<integer>68</integer>
+				<integer>102</integer>
 				<key>script</key>
-				<string>osascript -l JavaScript stopTask.js</string>
+				<string>osascript -l JavaScript startTask.js "{query}"</string>
 				<key>scriptargtype</key>
-				<integer>1</integer>
+				<integer>0</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
@@ -157,7 +180,7 @@
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>A548DA55-5C70-4C27-ABF2-228D4D0C6556</string>
+			<string>B15F95C5-136D-458C-8C85-086C07725276</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -166,33 +189,33 @@
 	<string></string>
 	<key>uidata</key>
 	<dict>
-		<key>034C4361-5DDC-4673-8760-0C0ABA995F3A</key>
+		<key>32EAA6C3-50B5-4590-ACE5-FD280CF3CA4F</key>
 		<dict>
 			<key>xpos</key>
-			<integer>470</integer>
+			<integer>495</integer>
 			<key>ypos</key>
-			<integer>400</integer>
+			<integer>375</integer>
 		</dict>
 		<key>70C36F38-409B-45D1-AE5A-5825FEE60148</key>
 		<dict>
 			<key>xpos</key>
-			<integer>470</integer>
+			<integer>340</integer>
 			<key>ypos</key>
-			<integer>240</integer>
+			<integer>355</integer>
 		</dict>
 		<key>A548DA55-5C70-4C27-ABF2-228D4D0C6556</key>
 		<dict>
 			<key>xpos</key>
-			<integer>720</integer>
+			<integer>600</integer>
 			<key>ypos</key>
-			<integer>400</integer>
+			<integer>260</integer>
 		</dict>
 		<key>B15F95C5-136D-458C-8C85-086C07725276</key>
 		<dict>
 			<key>xpos</key>
-			<integer>720</integer>
+			<integer>595</integer>
 			<key>ypos</key>
-			<integer>240</integer>
+			<integer>425</integer>
 		</dict>
 	</dict>
 	<key>webaddress</key>

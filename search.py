@@ -33,11 +33,16 @@ def main(workflow):
 
     LOGGER.debug('Started search workflow')
     args = parse_args()
-
-    if args.query:
+    
+    if args.pause:
+        LOGGER.debug("Pause timing task")
+        WORKFLOW.add_item(title="Pause current task", arg='pause', valid=True)
+    elif args.query:
         query = args.query[0]
         LOGGER.debug("Searching tasks for %s", format(query))
         execute_search_query(args)
+    else:
+        raise Exception("Cannot parse")
 
     workflow.send_feedback()
 
@@ -48,12 +53,8 @@ def parse_args():
     """
     parser = argparse.ArgumentParser(description="Parse Tasks Argument")
 
-# TODO: Add new task    
-#     parser.add_argument('-n', '--new', default=False, const=True, nargs=0, type=bool, help='New task or not')
-#     
-#     parser.add_argument('-t', '--taskname', nargs=1, type=str, help='Name of the new task')
-   
-    parser.add_argument('query', type=unicode, nargs=argparse.REMAINDER, help='query string')
+    parser.add_argument('--pause', '-p', action='store_true', help="pause current task")
+    parser.add_argument('query', type=unicode, nargs=argparse.REMAINDER, help='query to start a task')
 
     LOGGER.debug(WORKFLOW.args)
     args = parser.parse_args(WORKFLOW.args)
@@ -80,11 +81,12 @@ def execute_search_query(args):
         task_results = queries.list_recent_tasks(WORKFLOW, LOGGER, query)
     
     if not task_results:
-        WORKFLOW.add_item("No tasks found")
+        WORKFLOW.add_item(title="No tasks found. Add it as a new task?", arg=json.dumps({"task_name": query}), valid=True)
     else:
         for task_result in task_results:
             LOGGER.debug(task_result)
-            json_arg = json.dumps({"task_name": task_result[0], "proj_name":task_result[1], "proj_id":str( task_result[2])})
+            # since project name can be duplicated, the project id is required
+            json_arg = json.dumps({"task_name": task_result[0], "proj_name":task_result[1], "proj_id":str(task_result[2])})
             LOGGER.debug(json_arg)
             WORKFLOW.add_item(title=task_result[0], subtitle="Project: {}".format(task_result[1]), arg=json_arg, valid=True)        
 
