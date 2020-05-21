@@ -14,6 +14,8 @@
 - [chrisbro](https://github.com/chrisbro): use his [alfred-bear](https://github.com/chrisbro/alfred-bear) as the skeleton.
 
 ## Versions
+## v1.1
+Fix a bug.
 ## v1.0
 Add most functions that I need.
 ## v0.0.1 
