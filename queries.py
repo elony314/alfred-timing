@@ -10,9 +10,9 @@ import os
 
 DB_PATH = "Library/Application Support/info.eurocomp.Timing2/SQLite.db"
 
-RECENT_TASKS =  "SELECT DISTINCT TaskActivity.title, Project.title, Project.id FROM TaskActivity INNER JOIN Project ON TaskActivity.projectID=Project.id WHERE TaskActivity.isDeleted=0 ORDER BY TaskActivity.endDate DESC LIMIT 10"
+RECENT_TASKS =  "SELECT DISTINCT TaskActivity.title, Project.title, Project.id FROM TaskActivity LEFT OUTER JOIN Project ON TaskActivity.projectID=Project.id WHERE TaskActivity.isDeleted=0 ORDER BY TaskActivity.endDate DESC LIMIT 10"
   
-TASKS_BY_TITLE = "SELECT DISTINCT TaskActivity.title, Project.title, Project.id FROM TaskActivity INNER JOIN Project ON TaskActivity.projectID=Project.id WHERE TaskActivity.isDeleted=0 AND lower(TaskActivity.title) LIKE lower('%{0}%')"
+TASKS_BY_TITLE = "SELECT DISTINCT TaskActivity.title, Project.title, Project.id FROM TaskActivity LEFT OUTER JOIN Project ON TaskActivity.projectID=Project.id WHERE TaskActivity.isDeleted=0 AND lower(TaskActivity.title) LIKE lower('%{0}%')"
 
 def list_recent_tasks(workflow, log, query):
     """

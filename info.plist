@@ -98,7 +98,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>tmt</string>
+				<string>timing</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -118,7 +118,7 @@
 				<key>subtext</key>
 				<string>Recent Tasks</string>
 				<key>title</key>
-				<string>Search Timing Tasks</string>
+				<string>Quick Timing Access</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>

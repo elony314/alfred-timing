@@ -14,24 +14,21 @@ from workflow import Workflow, ICON_SYNC
 SINGLE_QUOTE = "'"
 ESC_SINGLE_QUOTE = "''"
 
-LOGGER = None
-
 # Update workflow from GitHub repo
 UPDATE_SETTINGS = {'github_slug': 'elony314/alfred-timing'}
 SHOW_UPDATES = True
 
+WORKFLOW = Workflow(update_settings=UPDATE_SETTINGS)
+LOGGER = WORKFLOW.logger
 
 def main(workflow):
-    """
-    I don't use pylint 
-    """
     if SHOW_UPDATES and workflow.update_available:
         workflow.add_item('A new version is available',
                           'Action this item to install the update',
                           autocomplete='workflow:update',
                           icon=ICON_SYNC)
 
-    LOGGER.debug('Started search workflow')
+    LOGGER.debug('Started workflow')
     args = parse_args()
     
     if args.pause:
@@ -39,13 +36,13 @@ def main(workflow):
         WORKFLOW.add_item(title="Pause current task", arg='pause', valid=True)
     elif args.query:
         query = args.query[0]
+        query = query.encode('utf-8')
         LOGGER.debug("Searching tasks for %s", format(query))
-        execute_search_query(args)
+        execute_search_query(query)
     else:
         raise Exception("Cannot parse")
 
     workflow.send_feedback()
-
 
 def parse_args():
     """
@@ -61,22 +58,19 @@ def parse_args():
     return args
 
 
-def execute_search_query(args):
+def execute_search_query(query):
     """
     Decides what search to run based on args that were passed in and executes the search.
     """
-    query = None
-    if args.query[0]:
+    if query: # user has input, search based on input
         LOGGER.debug('Searching tasks')
-        query = args.query[0]
-        query = query.encode('utf-8')
-
-        if SINGLE_QUOTE in query:
-            query = query.replace(SINGLE_QUOTE, ESC_SINGLE_QUOTE)
+        
+        # escape single quote
+        query = query.replace(SINGLE_QUOTE, ESC_SINGLE_QUOTE)
         
         task_results =  queries.search_tasks_by_title(WORKFLOW, LOGGER, query)
     
-    else:
+    else: #  user has not input, List recent tasks
         LOGGER.debug('List recent tasks')
         task_results = queries.list_recent_tasks(WORKFLOW, LOGGER, query)
     
@@ -86,11 +80,14 @@ def execute_search_query(args):
         for task_result in task_results:
             LOGGER.debug(task_result)
             # since project name can be duplicated, the project id is required
-            json_arg = json.dumps({"task_name": task_result[0], "proj_name":task_result[1], "proj_id":str(task_result[2])})
+            if task_result[1] != None:
+                json_arg = json.dumps({"task_name": task_result[0], "proj_name":task_result[1], "proj_id":str(task_result[2])})
+            else:
+                json_arg = json.dumps({"task_name": task_result[0]})
+            
             LOGGER.debug(json_arg)
-            WORKFLOW.add_item(title=task_result[0], subtitle="Project: {}".format(task_result[1]), arg=json_arg, valid=True)        
+            WORKFLOW.add_item(title=task_result[0], subtitle="Project: {}".format(task_result[1]), arg=json_arg, valid=True)
+
 
 if __name__ == '__main__':
-    WORKFLOW = Workflow(update_settings=UPDATE_SETTINGS)
-    LOGGER = WORKFLOW.logger
     sys.exit(WORKFLOW.run(main))
