@@ -8,17 +8,21 @@ function run(argv) {
 
 	if (task.proj_id){ //if exist a parent project
 		//get the project instance by id
-		function searchProjectByID(id, projects=helper.rootProjects()) {
-			return projects.map((project) => {
-				if (project.id() === id) {
-					return project
+		function searchProjById(id, projects=helper.rootProjects()){
+			return projects.map(p=>{
+				if(p.id() === id){
+					return p
+				} if (p.projects()!==undefined && p.projects().length!=0){
+					return searchProjById(id, p.projects())
 				} else {
-					return searchProjectByID(project.projects(), id)
+					return null
 				}
+			}).reduce((acc, cur)=>{
+				return acc!==null ? acc : cur
 			})
 		}
 
-		helper.startTask({ "withTitle": task.task_name, "project": searchProjectByID(task.proj_id) })
+		helper.startTask({ "withTitle": task.task_name, "project": searchProjById(task.proj_id)})
 	} else { //either it is a existing task with no parent, or it is a new task
 		helper.startTask({"withTitle": task.task_name})
 	}
